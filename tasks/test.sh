@@ -2,12 +2,9 @@
 
 set -e
 
-export GOPATH=$(pwd)/gopath
+export GOPATH=$PWD/gopath:$PWD/gopath/src/github.com/alphagov/paas-rds-broker/Godeps/_workspace
 export PATH=$PATH:$GOPATH/bin
 
 cd gopath/src/github.com/alphagov/paas-rds-broker
 
-go get github.com/onsi/ginkgo/ginkgo
-go get github.com/onsi/gomega
-
-ginkgo -r
+go test -v $(go list ./... | grep -v /ci/)
