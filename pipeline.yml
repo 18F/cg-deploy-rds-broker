@@ -88,6 +88,14 @@ jobs:
         TEST_PLAN: 9.3-medium
         TEST_PLAN_SNAPSHOT: 9.3-medium
         REGION: {{staging-aws-region}}
+        EXISTING_USER: {{staging-existing-user}}
+        EXISTING_USER_PASSWORD: {{staging-existing-user-password}}
+        APP_DOMAIN: {{staging-app-domain}}
+        INSTANCE_PREFIX: {{staging-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{staging-aws-secret-access-key}}
+        FORCE_SSL: {{staging-force-ssl}}
+        DRIVER: postgres
     - task: acceptance-tests-mysql
       file: broker-config/tasks/acceptance-tests.yml
       params:
@@ -97,6 +105,14 @@ jobs:
         TEST_PLAN: 5.5-medium
         TEST_PLAN_SNAPSHOT: 5.5-medium
         REGION: {{staging-aws-region}}
+        EXISTING_USER: {{staging-existing-user}}
+        EXISTING_USER_PASSWORD: {{staging-existing-user-password}}
+        APP_DOMAIN: {{staging-app-domain}}
+        INSTANCE_PREFIX: {{staging-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{staging-aws-secret-access-key}}
+        FORCE_SSL: {{staging-force-ssl}}
+        DRIVER: mysql
 
 - name: push-rds-broker-production
   serial: true

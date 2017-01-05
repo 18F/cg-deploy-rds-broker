@@ -9,6 +9,8 @@ image_resource:
 
 inputs:
 - name: broker-src
+  path: gopath/src/github.com/alphagov/paas-rds-broker
+- name: broker-config
 
 run:
   path: broker-config/tasks/acceptance-tests.sh
