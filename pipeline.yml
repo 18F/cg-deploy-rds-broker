@@ -35,7 +35,7 @@ jobs:
   - put: deploy-rds-broker-app-staging
     params:
       path: broker-src-built
-      manifest: broker-src-built/manifest.yml
+      manifest: broker-config/manifest.yml
       current_app_name: rds-broker
       environment_variables:
         AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
@@ -126,7 +126,7 @@ jobs:
   - put: deploy-rds-broker-app-production
     params:
       path: broker-src-built
-      manifest: broker-src-built/manifest.yml
+      manifest: broker-config/manifest.yml
       current_app_name: rds-broker
       environment_variables:
         AWS_ACCESS_KEY_ID: {{production-aws-access-key-id}}
