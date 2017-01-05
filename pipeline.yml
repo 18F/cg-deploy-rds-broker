@@ -83,20 +83,20 @@ jobs:
       file: broker-config/tasks/acceptance-tests.yml
       params:
         <<: *staging-cf-creds
-        APP_NAME: rds-acceptance-test-postgres
-        SERVICE_NAME: rdspostgres
-        PLAN_NAME: 9.3-medium
-        SERVICE_INSTANCE_NAME: rds-acceptance-test-postgres
-        URL_PATH: postgres
+        SERVICE: rdspostgres
+        PLANS: 9.3-medium
+        TEST_PLAN: 9.3-medium
+        TEST_PLAN_SNAPSHOT: 9.3-medium
+        REGION: {{staging-aws-region}}
     - task: acceptance-tests-mysql
       file: broker-config/tasks/acceptance-tests.yml
       params:
         <<: *staging-cf-creds
-        APP_NAME: rds-acceptance-test-mysql
-        SERVICE_NAME: rdsmysql
-        PLAN_NAME: 5.5-medium
-        SERVICE_INSTANCE_NAME: rds-acceptance-test-mysql
-        URL_PATH: mysql
+        SERVICE: rdsmysql
+        PLANS: 5.5-medium
+        TEST_PLAN: 5.5-medium
+        TEST_PLAN_SNAPSHOT: 5.5-medium
+        REGION: {{staging-aws-region}}
 
 - name: push-rds-broker-production
   serial: true
