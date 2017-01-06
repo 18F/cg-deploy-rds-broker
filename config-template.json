@@ -4,13 +4,9 @@
   "password": "password",
   "state_encryption_key": "key",
   "rds_config": {
-    "region": "us-east-1",
-    "db_prefix": "cf",
     "allow_user_provision_parameters": true,
     "allow_user_update_parameters": true,
     "allow_user_bind_parameters": true,
-    "master_password_seed": "jK5Q45Gx2q4I",
-    "broker_name": "GDS-prod-1",
     "catalog": {
       "services": [
         {
@@ -121,6 +117,11 @@
             }
           ]
         }
+      ],
+      "exclude_engines": [
+        {"engine": "postgres", "engine_version": "^9\\.3\\."},
+        {"engine": "postgres", "engine_version": "^9\\.4\\.[0-8]$"},
+        {"engine": "postgres", "engine_version": "^9\\.5\\.[0-4]$"}
       ]
     }
   }
