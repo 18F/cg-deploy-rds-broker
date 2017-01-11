@@ -8,4 +8,4 @@ env:
   AWS_ACCESS_KEY_ID: "your-aws-access-key-id"
   AWS_SECRET_ACCESS_KEY: "your-aws-secret-access-key"
   GO_INSTALL_PACKAGE_SPEC: "."
-  GOVERSION: "go1.5"
+  GOVERSION: "go1.7"
