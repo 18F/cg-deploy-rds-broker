@@ -35,7 +35,7 @@ jobs:
   - put: deploy-rds-broker-app-staging
     params:
       path: broker-src-built
-      manifest: broker-src-built/manifest.yml
+      manifest: broker-config/manifest.yml
       current_app_name: rds-broker
       environment_variables:
         AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
@@ -83,20 +83,30 @@ jobs:
       file: broker-config/tasks/acceptance-tests.yml
       params:
         <<: *staging-cf-creds
-        APP_NAME: rds-acceptance-test-postgres
-        SERVICE_NAME: rdspostgres
-        PLAN_NAME: 9.3-medium
-        SERVICE_INSTANCE_NAME: rds-acceptance-test-postgres
-        URL_PATH: postgres
+        SERVICE: {{staging-postgres-service}}
+        PLANS: {{staging-postgres-plans}}
+        TEST_PLAN: {{staging-postgres-test-plan}}
+        TEST_PLAN_SNAPSHOT: {{staging-postgres-test-plan-snapshot}}
+        REGION: {{staging-aws-region}}
+        INSTANCE_PREFIX: {{staging-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{staging-aws-secret-access-key}}
+        FORCE_SSL: {{staging-force-ssl}}
+        DRIVER: postgres
     - task: acceptance-tests-mysql
       file: broker-config/tasks/acceptance-tests.yml
       params:
         <<: *staging-cf-creds
-        APP_NAME: rds-acceptance-test-mysql
-        SERVICE_NAME: rdsmysql
-        PLAN_NAME: 5.5-medium
-        SERVICE_INSTANCE_NAME: rds-acceptance-test-mysql
-        URL_PATH: mysql
+        SERVICE: {{staging-mysql-service}}
+        PLANS: {{staging-mysql-plans}}
+        TEST_PLAN: {{staging-mysql-test-plan}}
+        TEST_PLAN_SNAPSHOT: {{staging-mysql-test-plan-snapshot}}
+        REGION: {{staging-aws-region}}
+        INSTANCE_PREFIX: {{staging-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{staging-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{staging-aws-secret-access-key}}
+        FORCE_SSL: {{staging-force-ssl}}
+        DRIVER: mysql
 
 - name: push-rds-broker-production
   serial: true
@@ -126,7 +136,7 @@ jobs:
   - put: deploy-rds-broker-app-production
     params:
       path: broker-src-built
-      manifest: broker-src-built/manifest.yml
+      manifest: broker-config/manifest.yml
       current_app_name: rds-broker
       environment_variables:
         AWS_ACCESS_KEY_ID: {{production-aws-access-key-id}}
@@ -169,14 +179,35 @@ jobs:
     - get: broker-config
       passed: [push-rds-broker-production]
       trigger: true
-  - task: smoke-tests-rds
-    file: broker-config/tasks/acceptance-tests.yml
-    params:
-      <<: *production-cf-creds
-      APP_NAME: rds-acceptance-test
-      SERVICE_NAME: aws-rds
-      PLAN_NAME: default
-      SERVICE_INSTANCE_NAME: rds-acceptance-test
+  - aggregate:
+    - task: acceptance-tests-postgres
+      file: broker-config/tasks/acceptance-tests.yml
+      params:
+        <<: *production-cf-creds
+        SERVICE: {{production-postgres-service}}
+        PLANS: {{production-postgres-plans}}
+        TEST_PLAN: {{production-postgres-test-plan}}
+        TEST_PLAN_SNAPSHOT: {{production-postgres-test-plan-snapshot}}
+        REGION: {{production-aws-region}}
+        INSTANCE_PREFIX: {{production-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{production-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{production-aws-secret-access-key}}
+        FORCE_SSL: {{production-force-ssl}}
+        DRIVER: postgres
+    - task: acceptance-tests-mysql
+      file: broker-config/tasks/acceptance-tests.yml
+      params:
+        <<: *production-cf-creds
+        SERVICE: {{production-mysql-service}}
+        PLANS: {{production-mysql-plans}}
+        TEST_PLAN: {{production-mysql-test-plan}}
+        TEST_PLAN_SNAPSHOT: {{production-mysql-test-plan-snapshot}}
+        REGION: {{production-aws-region}}
+        INSTANCE_PREFIX: {{production-instance-prefix}}
+        AWS_ACCESS_KEY_ID: {{production-aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: {{production-aws-secret-access-key}}
+        FORCE_SSL: {{production-force-ssl}}
+        DRIVER: mysql
 
 resource_types:
 - name: slack-notification
@@ -234,6 +265,9 @@ staging-cf-creds: &staging-cf-creds
   CF_PASSWORD: {{staging-cf-password}}
   CF_ORGANIZATION: {{staging-cf-organization}}
   CF_SPACE: {{staging-cf-space}}
+  EXISTING_USER: {{staging-existing-user}}
+  EXISTING_USER_PASSWORD: {{staging-existing-user-password}}
+  APP_DOMAIN: {{staging-app-domain}}
 
 production-cf-creds: &production-cf-creds
   CF_API_URL: {{production-cf-api-url}}
@@ -241,3 +275,6 @@ production-cf-creds: &production-cf-creds
   CF_PASSWORD: {{production-cf-password}}
   CF_ORGANIZATION: {{production-cf-organization}}
   CF_SPACE: {{production-cf-space}}
+  EXISTING_USER: {{production-existing-user}}
+  EXISTING_USER_PASSWORD: {{production-existing-user-password}}
+  APP_DOMAIN: {{production-app-domain}}
